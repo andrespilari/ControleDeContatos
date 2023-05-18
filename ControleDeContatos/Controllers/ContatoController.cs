@@ -36,24 +36,73 @@ namespace ControleDeContatos.Controllers
 
         public IActionResult Apagar(int id)
         {
-            _contatoRepositorio.Apagar(id);
-            return RedirectToAction("Index");
+            try
+            {
+                bool apagado = _contatoRepositorio.Apagar(id);
+
+                if (apagado)
+                {
+                    TempData["MensagemSucesso"] = "Registro apagado com sucesso.";
+                }
+                else
+                {
+                    TempData["MensagemErro"] = "Falha ao apagar o registro.";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception e)
+            {
+                TempData["MensagemErro"] = $"Falha ao apagar o registro: {e.Message}";
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
         public IActionResult Criar(ContatoModel contato)
         {
-            _contatoRepositorio.Adicionar(contato);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _contatoRepositorio.Adicionar(contato);
+                    TempData["MensagemSucesso"] = "Registro cadastrado com sucesso.";
 
-            return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(contato);
+            }
+            catch (System.Exception e)
+            {
+                TempData["MensagemErro"] = $"Falha ao cadastrar o registro: {e.Message}";
+                return RedirectToAction("Index");
+            }
         }
+
+        [TempData]
+        public string MensagemRetorno { get; set; }
 
         [HttpPost]
         public IActionResult Alterar(ContatoModel contato)
         {
-            _contatoRepositorio.Atualizar(contato);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _contatoRepositorio.Atualizar(contato);
+                    MensagemRetorno = "Registro alterado com sucesso.";
 
-            return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View("Editar", contato);
+            }
+            catch (System.Exception e)
+            {
+                MensagemRetorno = $"Falha ao alterar o registro: {e.Message}";
+                return RedirectToAction("Index");
+            }
         }
     }
 }
