@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ControleDeContatos.Models
 {
-    public class UsuarioModel
+    public class UsuarioSemSenhaModel
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Obrigatório preencher esse campo.")]
@@ -16,13 +16,5 @@ namespace ControleDeContatos.Models
         public string Email { get; set; }
         [Required(ErrorMessage = "Obrigatório preencher esse campo.")]
         public PerfilEnum? Perfil { get; set; }
-        [Required(ErrorMessage = "Obrigatório preencher esse campo.")]
-        public string Senha { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public DateTime? DataAtualizacao { get; set; }
-        public bool SenhaValida(string senha)
-        {
-            return Senha == senha;
-        }
     }
 }
