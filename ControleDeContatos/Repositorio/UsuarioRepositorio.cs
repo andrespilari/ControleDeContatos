@@ -1,5 +1,6 @@
 ﻿using ControleDeContatos.Data;
 using ControleDeContatos.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,9 @@ namespace ControleDeContatos.Repositorio
 
         public List<UsuarioModel> BuscarTodos()
         {
-            return _context.Usuarios.ToList();
+            return _context.Usuarios
+                .Include(x => x.Contatos)//nessa parte eu trago todos os usuarios vinculados a esse usuario X, porem na model o contatos precisa estar como VIRTUAL aula de modal ele explica no minutos 9:00
+                .ToList();
         }
 
         public UsuarioModel Adicionar(UsuarioModel usuario)
